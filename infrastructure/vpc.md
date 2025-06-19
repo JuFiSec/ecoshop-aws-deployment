@@ -11,7 +11,7 @@
 * [cite_start]**Enable DNS hostnames:** Enabled 
 * [cite_start]**Enable DNS resolution:** Enabled 
 
-[cite_start]![VPC Creation Screenshot](images/vpc-overview.png) 
+[cite_start]![VPC Creation Screenshot](images/vpc-overview.png)
 
 ## 1.2 Subnet Creation (6 subnets across 2 AZs)
 
