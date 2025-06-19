@@ -2,7 +2,7 @@
 
 ## Deployed Architecture Diagram
 
-![Deployed Architecture Diagram](images/architecture-diagram.png) 
+![Deployed Architecture Diagram](../images/architecture-diagram.png)
 
 ## Detailed IP Addressing Plan
 
@@ -20,11 +20,11 @@
 
 ## Specific Assigned IP Addresses
 
-* **Bastion Host:** `10.0.1.x` (in `ecosop-public-1a`) 
-* **NAT Gateway:** `10.0.1.y` (in `ecosop-public-1a`) 
-* **App Server 1:** `10.0.10.90` (in `ecosop-private-app-1a`) 
-* **App Server 2:** `10.0.20.66` (in `ecosop-private-app-1b`) 
-* **RDS Instance:** `10.0.100.x` and `10.0.200.x` (Multi-AZ) 
+* **Bastion Host:** `10.0.1.x` (in `ecosop-public-1a`)
+* **NAT Gateway:** `10.0.1.y` (in `ecosop-public-1a`)
+* **App Server 1:** `10.0.10.90` (in `ecosop-private-app-1a`)
+* **App Server 2:** `10.0.20.66` (in `ecosop-private-app-1b`)
+* **RDS Instance:** `10.0.100.x` and `10.0.200.x` (Multi-AZ)
 
 ## Network Flow Matrix
 
