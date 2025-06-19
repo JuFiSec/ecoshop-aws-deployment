@@ -9,5 +9,3 @@
 | No internet access from app servers | Verifying route to NAT Gateway in the private table        | 15 min  |
 | RDS connection failed               | Opening port 3306 in `SGDatabase` from `SGApp-Servers`     | 8 min   |
 | SSH to app servers failed           | Configuring SSH agent forwarding on the bastion            | 12 min  |
-
-[cite_start][cite: 49]
