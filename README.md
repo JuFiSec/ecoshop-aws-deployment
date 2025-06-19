@@ -31,18 +31,18 @@ This report details the complete deployment process of a robust and scalable inf
     * [TEST 2: Bastion Connectivity Test](tests_and_validation.md#test-2-bastion-connectivity-test)
     * [TEST 3: Application Test via ALB](tests_and_validation.md#test-3-application-test-via-alb)
     * [TEST 4: Database Test](tests_and_validation.md#test-4-database-test)
-7.  [**DOCUMENTED ARCHITECTURE**](#documented-architecture)
+7.  [**DOCUMENTED ARCHITECTURE**](architecture/ip_addressing_plan.md)
     * [Deployed Architecture Diagram](architecture/ip_addressing_plan.md#deployed-architecture-diagram)
     * [Detailed IP Addressing Plan](architecture/ip_addressing_plan.md#detailed-ip-addressing-plan)
     * [Specific Assigned IP Addresses](architecture/ip_addressing_plan.md#specific-assigned-ip-addresses)
     * [Network Flow Matrix](architecture/ip_addressing_plan.md#network-flow-matrix)
-8.  [**DEPLOYMENT LOG**](#deployment-log)
-    * [Issues Encountered and Solutions](#issues-encountered-and-solutions)
-9.  [**CRITICAL ANALYSIS**](#critical-analysis)
-    * [Security](#security)
-    * [High Availability](#high-availability)
-    * [Performance and Cost](#performance-and-cost)
-    * [Additional Recommendations](#additional-recommendations)
+8.  [**DEPLOYMENT LOG**](deployment_log.md)
+    * [Issues Encountered and Solutions](deployment_log.md#issues-encountered-and-solutions)
+9.  [**CRITICAL ANALYSIS**](critical_analysis.md)
+    * [Security](critical_analysis.md#security)
+    * [High Availability](critical_analysis.md#high-availability)
+    * [Performance and Cost](critical_analysis.md#performance-and-cost)
+    * [Additional Recommendations](critical_analysis.md#additional-recommendations)
 
 ---
 
@@ -64,27 +64,27 @@ This report details the complete deployment process of a robust and scalable inf
 
 ### Security
 
-[cite_start]The infrastructure adheres to basic best practices (private subnets for sensitive servers, segmented security groups). However, further improvements can be made:
+The infrastructure adheres to basic best practices (private subnets for sensitive servers, segmented security groups). However, further improvements can be made:
 
-* [cite_start]Adding AWS WAF in front of the Load Balancer would help block common web attacks (e.g., SQLI, XSS).
-* [cite_start]Secrets Manager would be preferable for managing passwords, especially database credentials, instead of hardcoding them.
-* [cite_start]Activating CloudTrail and VPC Flow Logs would enhance visibility and auditability of actions performed in the environment.
+* Adding AWS WAF in front of the Load Balancer would help block common web attacks (e.g., SQLI, XSS).
+* Secrets Manager would be preferable for managing passwords, especially database credentials, instead of hardcoding them.
+* Activating CloudTrail and VPC Flow Logs would enhance visibility and auditability of actions performed in the environment.
 
 ### High Availability
 
-* [cite_start]Using an Auto Scaling Group would automate the addition or removal of EC2 instances based on load.
-* [cite_start]For RDS, the Multi-AZ option has been enabled, which is a good point. [cite_start]However, one or more read replicas could be added to optimize read operations.
+* Using an Auto Scaling Group would automate the addition or removal of EC2 instances based on load.
+* For RDS, the Multi-AZ option has been enabled, which is a good point. However, one or more read replicas could be added to optimize read operations.
 
 ### Performance and Cost
 
 Several optimizations are possible:
 
-* [cite_start]Replacing some instances with Spot Instances for development or testing environments.
-* [cite_start]Migrating EBS storage from GP2 to GP3 would save up to 20% without performance loss.
-* [cite_start]Implementing CloudFront as a CDN for static files would reduce latency for end-users.
+* Replacing some instances with Spot Instances for development or testing environments.
+* Migrating EBS storage from GP2 to GP3 would save up to 20% without performance loss.
+* Implementing CloudFront as a CDN for static files would reduce latency for end-users.
 
 ### Additional Recommendations
 
-* [cite_start]Encryption of data at rest and in transit.
-* [cite_start]Disabling root SSH login.
-* [cite_start]Implementing HTTPS security headers on the application.
+* Encryption of data at rest and in transit.
+* Disabling root SSH login.
+* Implementing HTTPS security headers on the application.
