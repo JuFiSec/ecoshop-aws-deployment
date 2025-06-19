@@ -2,7 +2,7 @@
 
 ## Deployed Architecture Diagram
 
-![Deployed Architecture Diagram](images/ecoshop_architecture.mermaid)
+![Deployed Architecture Diagram](images/architecture-diagram.png)
 
 ## Detailed IP Addressing Plan
 
