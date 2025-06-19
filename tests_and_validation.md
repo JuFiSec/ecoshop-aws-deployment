@@ -36,7 +36,7 @@ The application is accessible via the Load Balancer's DNS, and requests are corr
 1.  Copy the Load Balancer DNS (available in the ALB console).
 2.  Paste the DNS into a web browser.
 
-![Application Result via ALB](../images/alb-test.png)
+![Application Result via ALB](images/alb-test.png)
 
 ## TEST 4: Database Test
 
