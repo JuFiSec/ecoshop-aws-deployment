@@ -1,0 +1,120 @@
+graph TB
+    %% Internet et utilisateurs
+    Internet[🌐 Internet<br/>Users] --> IGW[Internet Gateway<br/>ecosop-igw]
+    
+    %% VPC Container
+    subgraph VPC["🏢 VPC: ecosop-vpc (10.0.0.0/16)"]
+        
+        %% Public Subnets
+        subgraph AZ1["🌍 Availability Zone: us-east-1a"]
+            subgraph PubSub1["📡 Public Subnet (10.0.1.0/24)<br/>ecosop-public-1a"]
+                ALB1[Application Load Balancer<br/>ecoshop-alb]
+                NAT[NAT Gateway<br/>ecosop-nat-gw<br/>🔌 Elastic IP]
+                Bastion[🔐 Bastion Host<br/>ecosop-bastion<br/>t3.micro]
+            end
+            
+            subgraph PrivAppSub1["🔒 Private App Subnet (10.0.10.0/24)<br/>ecosop-private-app-1a"]
+                App1[🖥️ App Server 1<br/>ecosop-app-server-1<br/>t3.small<br/>Apache+PHP+MySQL]
+            end
+            
+            subgraph PrivDbSub1["🗄️ Private DB Subnet (10.0.100.0/24)<br/>ecosop-private-db-1a"]
+                DB1[📊 RDS Primary<br/>ecoshop-db<br/>MySQL 8.0.35<br/>db.t3.micro]
+            end
+        end
+        
+        subgraph AZ2["🌍 Availability Zone: us-east-1b"]
+            subgraph PubSub2["📡 Public Subnet (10.0.2.0/24)<br/>ecosop-public-1b"]
+                ALB2[Application Load Balancer<br/>ecoshop-alb]
+            end
+            
+            subgraph PrivAppSub2["🔒 Private App Subnet (10.0.20.0/24)<br/>ecosop-private-app-1b"]
+                App2[🖥️ App Server 2<br/>ecosop-app-server-2<br/>t3.small<br/>Apache+PHP+MySQL]
+            end
+            
+            subgraph PrivDbSub2["🗄️ Private DB Subnet (10.0.200.0/24)<br/>ecosop-private-db-1b"]
+                DB2[📊 RDS Standby<br/>Multi-AZ Replica<br/>MySQL 8.0.35]
+            end
+        end
+        
+        %% Target Group
+        subgraph TG["🎯 Target Group: ecoshop-tg"]
+            TG_Details[HTTP:80<br/>Health Check: /index.php<br/>Targets: App1 & App2]
+        end
+        
+        %% DB Subnet Group
+        subgraph DBSubGroup["🗂️ DB Subnet Group: ecoshop-db-subnet-group"]
+            DBSub_Details[Subnets:<br/>• ecosop-private-db-1a<br/>• ecosop-private-db-1b]
+        end
+    end
+    
+    %% Route Tables
+    subgraph RT["📋 Route Tables"]
+        PubRT[🌐 Public Route Table<br/>ecosop-public-rt<br/>0.0.0.0/0 → IGW<br/>10.0.0.0/16 → Local]
+        PrivRT[🔒 Private Route Table<br/>ecosop-private-rt<br/>0.0.0.0/0 → NAT<br/>10.0.0.0/16 → Local]
+    end
+    
+    %% Security Groups
+    subgraph SG["🛡️ Security Groups"]
+        SGWeb[🌐 SGWeb-ALB<br/>HTTP:80 ← 0.0.0.0/0<br/>HTTPS:443 ← 0.0.0.0/0]
+        SGApp[🖥️ SGApp-Servers<br/>HTTP:80 ← SGWeb-ALB<br/>Port:8080 ← SGWeb-ALB<br/>SSH:22 ← SGBastion]
+        SGDB[🗄️ SGDatabase<br/>MySQL:3306 ← SGApp-Servers]
+        SGBast[🔐 SGBastion<br/>SSH:22 ← YOUR_PUBLIC_IP/32]
+    end
+    
+    %% Connections
+    IGW --> ALB1
+    IGW --> ALB2
+    ALB1 --> App1
+    ALB2 --> App2
+    App1 --> DB1
+    App2 --> DB1
+    DB1 -.->|Multi-AZ Replication| DB2
+    
+    Bastion --> App1
+    Bastion --> App2
+    
+    App1 --> NAT
+    App2 --> NAT
+    NAT --> IGW
+    
+    %% Security Group associations
+    SGWeb -.-> ALB1
+    SGWeb -.-> ALB2
+    SGApp -.-> App1
+    SGApp -.-> App2
+    SGDB -.-> DB1
+    SGDB -.-> DB2
+    SGBast -.-> Bastion
+    
+    %% Route Table associations
+    PubRT -.-> PubSub1
+    PubRT -.-> PubSub2
+    PrivRT -.-> PrivAppSub1
+    PrivRT -.-> PrivAppSub2
+    PrivRT -.-> PrivDbSub1
+    PrivRT -.-> PrivDbSub2
+    
+    %% Target Group association
+    TG --> App1
+    TG --> App2
+    ALB1 --> TG
+    ALB2 --> TG
+    
+    %% Styling
+    classDef publicSubnet fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef privateSubnet fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef dbSubnet fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef server fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef database fill:#fff8e1,stroke:#f57f17,stroke-width:2px
+    classDef loadbalancer fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef security fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef route fill:#f1f8e9,stroke:#558b2f,stroke-width:2px
+    
+    class PubSub1,PubSub2 publicSubnet
+    class PrivAppSub1,PrivAppSub2 privateSubnet
+    class PrivDbSub1,PrivDbSub2 dbSubnet
+    class App1,App2,Bastion server
+    class DB1,DB2 database
+    class ALB1,ALB2,TG loadbalancer
+    class SGWeb,SGApp,SGDB,SGBast security
+    class PubRT,PrivRT route
